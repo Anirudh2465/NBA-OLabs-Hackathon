@@ -16,6 +16,8 @@ This project is a modern, AI-powered interactive learning platform developed for
 ### 3. **Subject-Specific Knowledge Graphs**
    - Each subject is represented as an **interactive knowledge graph**.
    - Users can navigate through **topics, key formulae, solved problems, and practice questions** from each node.
+     ![WhatsApp Image 2025-03-01 at 16 53 01_47abe5e8](https://github.com/user-attachments/assets/05288157-b9b8-43ac-ad42-23e1a243f999)
+
 
 ### 4. **Interactive Simulations for Physics & Chemistry**
    - The platform supports **real-time physics and chemistry simulations**.
@@ -24,6 +26,8 @@ This project is a modern, AI-powered interactive learning platform developed for
 ### 5. **Quiz System**
    - Every topic and simulation ends with a **subjective and objective-based quiz**.
    - Reinforces learning through **concept-based assessments**.
+     ![WhatsApp Image 2025-03-01 at 16 54 08_cbcec919](https://github.com/user-attachments/assets/21ac40a8-2037-4b83-827e-55c5fb9d2668)
+
 
 ## Technologies Used
 - **Frontend:** Next.js, React.js, TailwindCSS
