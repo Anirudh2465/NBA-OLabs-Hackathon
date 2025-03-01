@@ -1,24 +1,66 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 🌙 Dark Mode Support */
+html {
+  scroll-behavior: smooth;
+  @apply bg-gray-900 text-white;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 🔹 Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500 rounded-lg;
+}
+
+/* ✅ Smooth Transitions */
+button,
+input,
+textarea {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* 🔥 Custom Button Styling */
+.btn {
+  @apply px-6 py-3 rounded-lg font-semibold;
+}
+
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600 text-white;
+}
+
+.btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-800 text-white;
+}
+
+/* 🏆 Container Setup */
+.container {
+  @apply max-w-7xl mx-auto px-6;
+}
+
+/* ✅ Typography Tweaks */
+h1 {
+  @apply text-3xl md:text-5xl font-bold;
+}
+
+h2 {
+  @apply text-2xl md:text-4xl font-semibold;
+}
+
+h3 {
+  @apply text-xl md:text-2xl font-medium;
+}
+
+/* 🔹 Card Design */
+.card {
+  @apply bg-gray-800 p-6 rounded-xl shadow-lg;
 }

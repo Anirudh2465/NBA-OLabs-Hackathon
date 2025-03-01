@@ -1,0 +1,38 @@
+.navbar {
+    background-color: #1a5276;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .navbar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .navbar-menu {
+    display: flex;
+  }
+  
+  .navbar-item {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .navbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }

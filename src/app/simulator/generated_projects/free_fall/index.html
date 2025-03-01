@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fall Simulation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/recharts@2.1.0/dist/recharts.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #root {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 900px;
+        }
+
+        .App {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .experiment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            width: 80%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        .controls label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .controls input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .controls button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .controls button:hover {
+            background-color: #367c39;
+        }
+
+        .canvas-container {
+            margin-bottom: 20px;
+        }
+
+        .results-display,
+        .safety-notes,
+        .educational-notes {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .safety-notes h2,
+        .educational-notes h2 {
+            margin-top: 0;
+        }
+
+        #konva-container {
+            border: 1px solid black;
+            background-color: #e0e0e0;
+        }
+
+        .graph-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/konva@8/konva.min.js"></script>
+    <script src="https://unpkg.com/react-konva@17/umd/react-konva.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.1.0/umd/Recharts.min.js"></script>
+    <script>
+        const { useState, useEffect, useRef } = React;
+        const { Stage, Layer, Circle, Line } = ReactKonva;
+        const { LineChart, Line: RechartsLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend } = Recharts;
+
+        const Controls = ({ height, gravity, onHeightChange, onGravityChange, onStart, onStop }) => {
+            return (
+                <div className="controls">
+                    <h2>Experiment Controls</h2>
+                    <div>
+                        <label htmlFor="height">Initial Height (m):</label>
+                        <input
+                            type="number"
+                            id="height"
+                            value={height}
+                            onChange={(e) => onHeightChange(parseFloat(e.target.value))}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="gravity">Gravity (m/s²):</label>
+                        <input
+                            type="number"
+                            id="gravity"
+                            value={gravity}
+                            onChange={(e) => onGravityChange(parseFloat(e.target.value))}
+                        />
+                    </div>
+                    <button onClick={onStart}>Start</button>
+                    <button onClick={onStop}>Stop</button>
+                </div>
+            );
+        };
+
+        const Graph = ({ time, velocity, position }) => {
+            const data = [{ time: time, velocity: velocity, position: position }];
+
+            return (
+                <div className="graph-container">
+                    <h2>Graph</h2>
+                    <LineChart
+                        width={600}
+                        height={300}
+                        data={data}
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="time" label={{ value: 'Time (s)', position: 'insideBottom', offset: -5 }} />
+                        <YAxis label={{ value: 'Value', angle: -90, position: 'insideLeft' }} />
+                        <Tooltip />
+                        <Legend />
+                        <RechartsLine type="monotone" dataKey="velocity" stroke="#8884d8" activeDot={{ r: 8 }} name="Velocity (m/s)" />
+                        <RechartsLine type="monotone" dataKey="position" stroke="#82ca9d" name="Position (m)" />
+                    </LineChart>
+                </div>
+            );
+        };
+
+        const SafetyNotes = () => {
+            return (
+                <div className="safety-notes">
+                    <h2>Safety Notes</h2>
+                    <ul>
+                        <li>This is a simulation; do not perform real-world experiments without proper supervision.</li>
+                        <li>Be aware of the potential dangers of falling objects.</li>
+                    </ul>
+                </div>
+            );
+        };
+
+        const EducationalNotes = () => {
+            return (
+                <div className="educational-notes">
+                    <h2>Educational Notes</h2>
+                    <p>
+                        This simulation demonstrates the principles of free fall, where an object accelerates towards the Earth due to gravity. The equation for the distance fallen (d) is:
+                        d = 1/2 * g * t^2
+                        Where:
+                        g = acceleration due to gravity (approximately 9.81 m/s²)
+                        t = time
+                    </p>
+                    <p>
+                        The velocity (v) of the object at any time is given by:
+                        v = g * t
+                    </p>
+                </div>
+            );
+        };
+
+        const ResultsDisplay = ({ results }) => {
+            return (
+                <div className="results-display">
+                    <h2>Results</h2>
+                    {results.impactVelocity && (
+                        <p>Impact Velocity: {results.impactVelocity} m/s</p>
+                    )}
+                    {results.timeOfImpact && (
+                        <p>Time of Impact: {results.timeOfImpact} s</p>
+                    )}
+                </div>
+            );
+        };
+
+        const Experiment = () => {
+            const [height, setHeight] = useState(10);
+            const [gravity, setGravity] = useState(9.81);
+            const [ballY, setBallY] = useState(0);
+            const [time, setTime] = useState(0);
+            const [velocity, setVelocity] = useState(0);
+            const [isRunning, setIsRunning] = useState(false);
+            const [trajectory, setTrajectory] = useState([]);
+            const [results, setResults] = useState({});
+
+            const stageRef = useRef(null);
+
+            const canvasWidth = 600;
+            const canvasHeight = 400;
+            const scaleFactor = canvasHeight / height;
+
+            const [calculatedHeight, setCalculatedHeight] = useState(height);
+            const [calculatedGravity, setCalculatedGravity] = useState(gravity);
+
+            const handleHeightChange = (newHeight) => {
+                setHeight(newHeight);
+                setCalculatedHeight(newHeight);
+                resetSimulation();
+            };
+
+            const handleGravityChange = (newGravity) => {
+                setGravity(newGravity);
+                setCalculatedGravity(newGravity);
+                resetSimulation();
+            };
+
+            const resetSimulation = () => {
+                setTime(0);
+                setVelocity(0);
+                setBallY(0);
+                setTrajectory([]);
+                setIsRunning(false);
+                setResults({});
+            };
+
+            const startSimulation = () => {
+                resetSimulation();
+                setIsRunning(true);
+            };
+
+            const stopSimulation = () => {
+                setIsRunning(false);
+            };
+
+            useEffect(() => {
+                let animationFrameId;
+
+                if (isRunning) {
+                    animationFrameId = requestAnimationFrame(() => {
+                        const deltaTime = 0.02;
+                        const newTime = time + deltaTime;
+                        const newVelocity = velocity + calculatedGravity * deltaTime;
+                        const newBallY = 0.5 * calculatedGravity * newTime * newTime;
+
+                        setTime(newTime);
+                        setVelocity(newVelocity);
+                        setBallY(newBallY);
+
+                        setTrajectory(prevTrajectory => [...prevTrajectory, { x: newTime * 50, y: newBallY * scaleFactor }]);
+
+                        if (newBallY >= calculatedHeight) {
+                            setIsRunning(false);
+                            setBallY(calculatedHeight);
+                            setResults({
+                                impactVelocity: newVelocity.toFixed(2),
+                                timeOfImpact: newTime.toFixed(2),
+                            });
+                        }
+                    });
+                }
+
+                return () => cancelAnimationFrame(animationFrameId);
+            }, [isRunning, time, velocity, calculatedHeight, calculatedGravity, scaleFactor]);
+
+            const ballX = canvasWidth / 2;
+            const ballYPixel = canvasHeight - ballY * scaleFactor;
+
+            return (
+                <div className="experiment-container">
+                    <Controls
+                        height={height}
+                        gravity={gravity}
+                        onHeightChange={handleHeightChange}
+                        onGravityChange={handleGravityChange}
+                        onStart={startSimulation}
+                        onStop={stopSimulation}
+                    />
+
+                    <div className="canvas-container">
+                        <Stage width={canvasWidth} height={canvasHeight} id="konva-container" ref={stageRef}>
+                            <Layer>
+                                <Line points={[0, canvasHeight, canvasWidth, canvasHeight]} stroke="green" strokeWidth={2} />
+                                <Circle x={ballX} y={ballYPixel} radius={10} fill="red" />
+                                <Line
+                                    points={trajectory.reduce((acc, point) => acc.concat([point.x, point.y]), [])}
+                                    stroke="blue"
+                                    strokeWidth={1}
+                                />
+                            </Layer>
+                        </Stage>
+                    </div>
+
+                    <ResultsDisplay results={results} />
+                    <Graph time={time} velocity={velocity} position={ballY} />
+                    <SafetyNotes />
+                    <EducationalNotes />
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="App">
+                    <h1>Free Fall Simulation</h1>
+                    <Experiment />
+                </div>
+            );
+        };
+
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>
