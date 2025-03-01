@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NBA OLabs Hackathon Project
 
-## Getting Started
+## Overview
+This project is a modern, AI-powered interactive learning platform developed for the **OLabs Hackathon**. It enhances the traditional OLabs platform by integrating a **comprehensive knowledge base**, **AI-driven chatbot**, **subject-wise knowledge graphs**, **interactive simulations**, and **dynamic quizzes** to improve the learning experience.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 1. **Enhanced Web-Based Learning Platform**
+   - A **better version of OLabs** with an intuitive and user-friendly interface.
+   - Covers **all science streams (Physics, Chemistry, Biology, and Mathematics) for classes 9 to 12**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. **AI-Powered Chatbot**
+   - The chatbot is trained on **all NCERT and reference textbooks** for classes 9 to 12.
+   - Provides **instant answers** to student queries and explains concepts interactively.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. **Subject-Specific Knowledge Graphs**
+   - Each subject is represented as an **interactive knowledge graph**.
+   - Users can navigate through **topics, key formulae, solved problems, and practice questions** from each node.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. **Interactive Simulations for Physics & Chemistry**
+   - The platform supports **real-time physics and chemistry simulations**.
+   - Helps students **visualize and experiment** with scientific concepts.
 
-## Learn More
+### 5. **Quiz System**
+   - Every topic and simulation ends with a **subjective and objective-based quiz**.
+   - Reinforces learning through **concept-based assessments**.
 
-To learn more about Next.js, take a look at the following resources:
+## Technologies Used
+- **Frontend:** Next.js, React.js, TailwindCSS
+- **Backend:** Node.js, Prisma, PostgreSQL
+- **AI & Chatbot:** OpenAI API, Hugging Face Transformers
+- **Simulations:** Three.js, WebGL, SciPy, ChemPy
+- **Graph Representation:** D3.js for knowledge graphs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How to Run the Project
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prerequisites
+Ensure you have **Node.js**, **PostgreSQL**, and **Prisma** installed.
 
-## Deploy on Vercel
+### Installation Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Anirudh2465/NBA-OLabs-Hackathon.git
+   ```
+2. Navigate to the project folder:
+   ```bash
+   cd NBA-OLabs-Hackathon
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Set up the database:
+   ```bash
+   npx prisma migrate dev
+   ```
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contribution Guidelines
+1. Fork the repository.
+2. Create a new branch.
+3. Make changes and commit with a descriptive message.
+4. Open a pull request for review.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the MIT License.
+
+## Acknowledgements
+- **OLabs Hackathon** for the opportunity.
+- **Team NBA** for collaboration and development efforts.
+- **Contributors** for their valuable input in improving this platform.
+
+---
+This README provides an overview of the project, its features, setup instructions, and contribution guidelines. 🚀
+
